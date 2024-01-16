@@ -1,6 +1,6 @@
 # Define the tesseract language
 #
-language: deu
+language: eng
 
 # Where the receipts are stored
 # Receipts should be simple text files

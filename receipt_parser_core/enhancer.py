@@ -19,8 +19,10 @@ import os
 
 import cv2
 import numpy as np
+import scipy
 from PIL import Image
-from pytesseract import pytesseract
+import pytesseract
+
 from wand.image import Image as WandImage
 from scipy.ndimage import interpolation as inter
 
@@ -90,7 +92,7 @@ def rotate_image(input_file, output_file, angle=90):
 
 def deskew_image(image, delta=1, limit=5):
     def determine_score(arr, angle):
-        data = inter.rotate(arr, angle, reshape=False, order=0)
+        data = scipy.ndimage.rotate(arr, angle, reshape=False, order=0)
         histogram = np.sum(data, axis=1)
         score = np.sum((histogram[1:] - histogram[:-1]) ** 2)
         return histogram, score
