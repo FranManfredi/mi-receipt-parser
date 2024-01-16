@@ -11,8 +11,7 @@ def main():
   print("receipt_files", receipt_files)
   stats = ocr_receipts(config, receipt_files)
   print("stats", stats)
-  output_statistics(stats)
-
+  output_statistics(stats, None)
 
 if __name__ == "__main__":
   main()
