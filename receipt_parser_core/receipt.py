@@ -1,23 +1,6 @@
-# !/usr/bin/python3
-# coding: utf-8
 
-# Copyright 2015-2018
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-import fnmatch
 import json
 import re
-from collections import namedtuple
 import dateutil.parser
 from difflib import get_close_matches
 
@@ -29,7 +12,7 @@ def add_card_number(payment_method_line):
 
 
 class Receipt(object):
-    """ Market receipt to be parsed """
+    """ Company receipt to be parsed """
 
     def __init__(self, config, raw):
         """
@@ -40,10 +23,9 @@ class Receipt(object):
         """
 
         self.config = config
-        self.market = None
+        self.company = None
         self.date = None
-        self.sum = None
-        self.items = None
+        self.total = None
         self.payment_method = None
         self.lines = raw
         self.normalize()
@@ -68,10 +50,9 @@ class Receipt(object):
             Parses obj data
         """
 
-        self.market = self.parse_market()
+        self.company = self.parse_company()
         self.date = self.parse_date()
-        self.sum = self.parse_sum()
-        self.items = self.parse_items()
+        self.total = self.parse_total()
         self.payment_method = self.parse_payment_method()
 
     def fuzzy_find(self, keyword, accuracy=0.6):
@@ -111,50 +92,13 @@ class Receipt(object):
 
                 return date_str
 
-    def parse_items(self):
-        items = []
-        item = namedtuple("item", ("article", "sum"))
-
-        ignored_words = self.config.get_config("ignore_keys", self.market)
-        stop_words = self.config.get_config("sum_keys", self.market)
-        item_format = self.config.get_config("item_format", self.market)
-
-        for line in self.lines:
-            parse_stop = None
-            for ignore_word in ignored_words:
-                parse_stop = fnmatch.fnmatch(line, f"*{ignore_word}*")
-                if parse_stop:
-                    break
-
-            if parse_stop:
-                continue
-
-            if self.market != "Metro":
-                for stop_word in stop_words:
-                    if fnmatch.fnmatch(line, f"*{stop_word}*"):
-                        return items
-
-            match = re.search(item_format, line)
-            if hasattr(match, 'group'):
-                article_name = match.group(1)
-
-                if match.group(2) == "-":
-                    article_sum = "-" + match.group(3).replace(",", ".")
-                else:
-                    article_sum = match.group(3).replace(",", ".")
-            else:
-                continue
-
-            items.append(item(article_name, article_sum))
-
-        return items
-
-    def parse_market(self):
+    def parse_company(self):
         """
         :return: str
             Parses market data
         """
 
+        global market_match
         for int_accuracy in range(10, 6, -1):
             accuracy = int_accuracy / 10.0
 
@@ -169,10 +113,10 @@ class Receipt(object):
 
         return market_match
 
-    def parse_sum(self):
+    def parse_total(self):
         """
         :return: str
-            Parses sum data
+            Parses total data
         """
 
         for sum_key in self.config.sum_keys:
@@ -200,10 +144,9 @@ class Receipt(object):
             Convert Receipt object to json
         """
         object_data = {
-            "market": self.market,
+            "company": self.company,
             "date": self.date,
-            "sum": self.sum,
-            "items": self.items,
+            "total": self.total,
             "lines": self.lines
         }
 

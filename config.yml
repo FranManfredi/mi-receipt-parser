@@ -14,10 +14,19 @@ markets:
   Junior’s:
     - Junior’s
 
-# Sum keys roughly ordered by likelyhood.
+# Sum keys roughly ordered by likelihood.
 sum_keys:
   - total
   - sum
+
+# Payment method keys, ordered by likelihood
+payment_method_keys:
+  - visa
+  - credit
+
+# Receipt number key
+receipt_no_key:
+  - check
 
 ignore_keys:
   - mwst
@@ -25,10 +34,6 @@ ignore_keys:
   - stkx
   - stk
   - zw-summe
-
-payment_method_keys:
-  - visa
-  - credit
 
 sum_format: '\d+(\.\s?|,\s?|[^a-zA-Z\d])\d{2}'
 

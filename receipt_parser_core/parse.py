@@ -116,23 +116,16 @@ def ocr_receipts(config, receipt_files):
         with open(receipt_path, encoding="utf8", errors='ignore') as receipt:
             receipt = Receipt(config, receipt.readlines())
 
-            item_list = ""
-            for item in receipt.items:
-                if not item:
-                    continue
-
-                item_list += ' '.join(item) + "\n"
-
             table_data.append(
-                [receipt.date, receipt.market, receipt.payment_method, receipt.sum]
+                [receipt.date, receipt.company, receipt.payment_method, receipt.total]
             )
 
             stats["total"] += 1
-            if receipt.market:
+            if receipt.company:
                 stats["market"] += 1
             if receipt.date:
                 stats["date"] += 1
-            if receipt.sum:
+            if receipt.total:
                 stats["sum"] += 1
 
     table = SingleTable(table_data)
