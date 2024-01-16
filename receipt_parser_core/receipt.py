@@ -18,8 +18,15 @@ import fnmatch
 import json
 import re
 from collections import namedtuple
-from datetime import datetime
+import dateutil.parser
 from difflib import get_close_matches
+
+
+def add_card_number(payment_method_line):
+    numbers = re.findall(r'\d+', payment_method_line)
+    joined_numbers = ''.join(numbers)
+    return joined_numbers
+
 
 class Receipt(object):
     """ Market receipt to be parsed """
@@ -37,6 +44,7 @@ class Receipt(object):
         self.date = None
         self.sum = None
         self.items = None
+        self.payment_method = None
         self.lines = raw
         self.normalize()
         self.parse()
@@ -64,6 +72,7 @@ class Receipt(object):
         self.date = self.parse_date()
         self.sum = self.parse_sum()
         self.items = self.parse_items()
+        self.payment_method = self.parse_payment_method()
 
     def fuzzy_find(self, keyword, accuracy=0.6):
         """
@@ -96,7 +105,7 @@ class Receipt(object):
                 date_str = match.group(1)
                 date_str = date_str.replace(" ", "")
                 try:
-                    datetime.strptime(date_str, "")
+                    dateutil.parser.parse(date_str)
                 except ValueError:
                     return None
 
@@ -177,6 +186,14 @@ class Receipt(object):
                 if sum_float:
                     return sum_float.group(0)
 
+    def parse_payment_method(self):
+        for payment_method_key in self.config.payment_method_keys:
+            payment_method_line = self.fuzzy_find(payment_method_key)
+            print(payment_method_line)
+            if payment_method_line:
+                return payment_method_key.upper() + " " + add_card_number(payment_method_line)
+        return "cash"
+
     def to_json(self):
         """
         :return: json
@@ -191,3 +208,4 @@ class Receipt(object):
         }
 
         return json.dumps(object_data)
+

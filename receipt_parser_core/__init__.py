@@ -10,6 +10,7 @@ def main():
   receipt_files = get_files_in_folder(config.receipts_path)
   print("receipt_files", receipt_files)
   stats = ocr_receipts(config, receipt_files)
+  print("stats", stats)
   output_statistics(stats)
 
 

@@ -23,7 +23,7 @@ from terminaltables import SingleTable
 
 from receipt_parser_core.receipt import Receipt
 
-BASE_PATH = "C:/Users/Franm/PycharmProjects/mi-receipt-parser"
+BASE_PATH = "C:/Users/Franm/PycharmProjects/mi-receipt-parser/receipt_parser_core"
 ORANGE = '\033[33m'
 RESET = '\033[0m'
 
@@ -106,7 +106,7 @@ def ocr_receipts(config, receipt_files):
     stats = defaultdict(int)
 
     table_data = [
-        ['Path', 'Market', "Date", "Items", "SUM"],
+        ['Path', 'Market', "Date", "Items", "Payement Method", "SUM"],
     ]
 
     if config.results_as_json:
@@ -124,7 +124,7 @@ def ocr_receipts(config, receipt_files):
                 item_list += ' '.join(item) + "\n"
 
             table_data.append(
-                [receipt_path, receipt.market, receipt.date, item_list, receipt.sum]
+                [receipt_path, receipt.market, receipt.date, item_list, receipt.payment_method, receipt.sum]
             )
 
             stats["total"] += 1

@@ -198,7 +198,7 @@ def detect_orientation(image):
     return image
 
 
-def enhance_image(img, tmp_path ,high_contrast=True, gaussian_blur=True, rotate=True): 
+def enhance_image(img, tmp_path ,high_contrast=True, gaussian_blur=False, rotate=False, deskew=False, shadows=False):
     img = rescale_image(img)
 
     if rotate:
@@ -206,13 +206,16 @@ def enhance_image(img, tmp_path ,high_contrast=True, gaussian_blur=True, rotate=
         rotate_image(tmp_path, tmp_path)
         img = cv2.imread(tmp_path)
 
-    img = deskew_image(img)
-    img = remove_shadows(img)
+    if deskew: #no
+        img = deskew_image(img)
 
-    if high_contrast:
+    if shadows: #no
+        img = remove_shadows(img)
+
+    if high_contrast: #si
         img = grayscale_image(img)
 
-    if gaussian_blur:
+    if gaussian_blur: #no
         img = remove_noise(img)
 
     return img
