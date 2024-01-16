@@ -23,7 +23,7 @@ from terminaltables import SingleTable
 
 from receipt_parser_core.receipt import Receipt
 
-BASE_PATH = os.getcwd()
+BASE_PATH = "C:/Users/Franm/PycharmProjects/mi-receipt-parser"
 ORANGE = '\033[33m'
 RESET = '\033[0m'
 
@@ -40,7 +40,7 @@ def get_files_in_folder(folder, include_hidden=False):
         List of full path of files in folder
     """
 
-    files = os.listdir(os.path.join(BASE_PATH, folder))  # list content of folder
+    files = os.listdir(os.path.join(BASE_PATH, "data/txt"))  # list content of folder
     if not include_hidden:  # avoid files starting with "."
         files = [
             f for f in files if not f.startswith(".")

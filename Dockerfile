@@ -1,7 +1,7 @@
 FROM python:3.9.13
 RUN apt-get update && apt-get install -y tesseract-ocr-all imagemagick ffmpeg libsm6 libxext6
 RUN pip install poetry
-WORKDIR /app
+WORKDIR ./mi-receipt-parser
 COPY . .
 
 RUN mkdir -p /app/data/img

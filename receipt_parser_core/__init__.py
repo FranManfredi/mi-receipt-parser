@@ -1,9 +1,17 @@
-from .config import read_config
-from .parse import *
+from receipt_parser_core.config import *
+from parse import *
 
 def main():
+  print("arranco")
   config = read_config()
-  receipt_files = get_files_in_folder(config.receipts_path)
-  stats = ocr_receipts(config, receipt_files)  
-  #output_statistics(stats)
 
+
+  print("config", config)
+  receipt_files = get_files_in_folder(config.receipts_path)
+  print("receipt_files", receipt_files)
+  stats = ocr_receipts(config, receipt_files)
+  output_statistics(stats)
+
+
+if __name__ == "__main__":
+  main()

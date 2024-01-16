@@ -3,7 +3,7 @@ import yaml
 from receipt_parser_core.objectview import ObjectView
 
 
-def read_config(config="config.yml"):
+def read_config(config="C:/Users/Franm/PycharmProjects/mi-receipt-parser/config.yml"):
     """
     :param file: str
         Name of file to read

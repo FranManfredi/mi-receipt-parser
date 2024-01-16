@@ -28,9 +28,9 @@ from receipt_parser_core import Receipt
 from receipt_parser_core.config import read_config
 
 BASE_PATH = os.getcwd()
-INPUT_FOLDER = os.path.join(BASE_PATH, "data/img")
-TMP_FOLDER = os.path.join(BASE_PATH, "data/tmp")
-OUTPUT_FOLDER = os.path.join(BASE_PATH, "data/txt")
+INPUT_FOLDER = os.path.join(BASE_PATH, "data\img")
+TMP_FOLDER = os.path.join(BASE_PATH, "data\\tmp")
+OUTPUT_FOLDER = os.path.join(BASE_PATH, "data\\txt")
 
 ORANGE = '\033[33m'
 RESET = '\033[0m'
@@ -249,7 +249,7 @@ def main():
     prepare_folders()
 
     dir_path = os.getcwd()
-    config = read_config(config=dir_path + "/config.yml")
+    config = read_config(config= "C:/Users/Franm/PycharmProjects/mi-receipt-parser/config.yml")
 
     images = list(find_images(INPUT_FOLDER))
     print(ORANGE + '~: ' + RESET + 'Found: ' + ORANGE + str(len(images)),

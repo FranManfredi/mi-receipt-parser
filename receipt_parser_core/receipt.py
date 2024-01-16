@@ -18,10 +18,8 @@ import fnmatch
 import json
 import re
 from collections import namedtuple
+from datetime import datetime
 from difflib import get_close_matches
-
-import dateutil.parser
-
 
 class Receipt(object):
     """ Market receipt to be parsed """
@@ -98,7 +96,7 @@ class Receipt(object):
                 date_str = match.group(1)
                 date_str = date_str.replace(" ", "")
                 try:
-                    dateutil.parser.parse(date_str)
+                    datetime.strptime(date_str, "")
                 except ValueError:
                     return None
 
