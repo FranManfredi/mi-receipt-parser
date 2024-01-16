@@ -106,7 +106,7 @@ def ocr_receipts(config, receipt_files):
     stats = defaultdict(int)
 
     table_data = [
-        ["Date", 'Company', "Payement Method", "TOTAL"],
+        ["Date", 'Company', "Receipt #", "Payement Method", "TOTAL"],
     ]
 
     if config.results_as_json:
@@ -117,7 +117,7 @@ def ocr_receipts(config, receipt_files):
             receipt = Receipt(config, receipt.readlines())
 
             table_data.append(
-                [receipt.date, receipt.company, receipt.payment_method, receipt.total]
+                [receipt.date, receipt.company, receipt.receipt_no, receipt.payment_method, receipt.total]
             )
 
             stats["total"] += 1

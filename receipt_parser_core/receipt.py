@@ -1,12 +1,11 @@
-
 import json
 import re
 import dateutil.parser
 from difflib import get_close_matches
 
 
-def add_card_number(payment_method_line):
-    numbers = re.findall(r'\d+', payment_method_line)
+def get_numbers_in_line(line):
+    numbers = re.findall(r'\d+', line)
     joined_numbers = ''.join(numbers)
     return joined_numbers
 
@@ -23,10 +22,13 @@ class Receipt(object):
         """
 
         self.config = config
+
+        self.receipt_no = None
         self.company = None
         self.date = None
-        self.total = None
         self.payment_method = None
+        self.total = None
+
         self.lines = raw
         self.normalize()
         self.parse()
@@ -49,7 +51,7 @@ class Receipt(object):
         :return: void
             Parses obj data
         """
-
+        self.receipt_no = self.parse_receipt_no()
         self.company = self.parse_company()
         self.date = self.parse_date()
         self.total = self.parse_total()
@@ -81,8 +83,7 @@ class Receipt(object):
 
         for line in self.lines:
             match = re.search(self.config.date_format, line)
-            if match:  # We"re happy with the first match for now
-                # validate date using the dateutil library (see: https://dateutil.readthedocs.io/)
+            if match:
                 date_str = match.group(1)
                 date_str = date_str.replace(" ", "")
                 try:
@@ -133,10 +134,15 @@ class Receipt(object):
     def parse_payment_method(self):
         for payment_method_key in self.config.payment_method_keys:
             payment_method_line = self.fuzzy_find(payment_method_key)
-            print(payment_method_line)
             if payment_method_line:
-                return payment_method_key.upper() + " " + add_card_number(payment_method_line)
+                return payment_method_key.upper() + " " + get_numbers_in_line(payment_method_line)
         return "cash"
+
+    def parse_receipt_no(self):
+        for receipt_no_key in self.config.receipt_no_keys:
+            receipt_no_line = self.fuzzy_find(receipt_no_key)
+            if receipt_no_line:
+                return get_numbers_in_line(receipt_no_line)
 
     def to_json(self):
         """
@@ -144,6 +150,7 @@ class Receipt(object):
             Convert Receipt object to json
         """
         object_data = {
+            "receipt_no": self.parse_receipt_no(),
             "company": self.company,
             "date": self.date,
             "total": self.total,
@@ -151,4 +158,3 @@ class Receipt(object):
         }
 
         return json.dumps(object_data)
-

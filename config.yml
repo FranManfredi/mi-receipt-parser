@@ -25,8 +25,12 @@ payment_method_keys:
   - credit
 
 # Receipt number key
-receipt_no_key:
+receipt_no_keys:
   - check
+
+location_keys:
+  - ', fl'
+  - ', ny'
 
 ignore_keys:
   - mwst
